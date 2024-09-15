@@ -55,7 +55,7 @@ func (i *InventoriesService) UpdateInventory(ctx context.Context, id int, data m
 	return &result, nil
 }
 
-// GetInventory retrives the inventory information from its ID or Name
+// GetInventory retrives the inventory information from its ID or InventoryName
 func (i *InventoriesService) GetInventory(ctx context.Context, id int) (*Inventory, error) {
 	result := Inventory{}
 	endpoint := fmt.Sprintf("/api/v2/inventories/%d", id)

@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 	"net/url"
@@ -178,7 +179,12 @@ func (r *Requester) Do(ctx context.Context, ar *APIRequest, responseStruct inter
 	if err != nil {
 		return nil, err
 	}
-	defer response.Body.Close()
+
+	defer func() {
+		if err := response.Body.Close(); err != nil {
+			logrus.Errorf("error closing response body: %v", err)
+		}
+	}()
 
 	bodyBytes, err := io.ReadAll(response.Body)
 	if err != nil {

@@ -719,7 +719,7 @@ type User struct {
 // Group represents a group
 type Group struct {
 	ID                       int       `json:"id"`
-	Type                     int       `json:"type"`
+	Type                     string    `json:"type"`
 	URL                      string    `json:"url"`
 	Related                  *Related  `json:"related"`
 	SummaryFields            *Summary  `json:"summary_fields"`
@@ -735,6 +735,12 @@ type Group struct {
 	TotalGroups              int       `json:"total_groups"`
 	GroupsWithActiveFailures int       `json:"groups_with_active_failures"`
 	HasInventorySources      bool      `json:"has_inventory_sources"`
+}
+
+// ListGroups represents `ListGroups` endpoint response.
+type ListGroups struct {
+	Pagination
+	Results []*Group `json:"results"`
 }
 
 // Host represents a host
@@ -777,7 +783,7 @@ type CancelJobResponse struct {
 	Detail string `json:"detail"`
 }
 
-// GetByName returns an Organization by 'Name' field case-insensitive.
+// GetByName returns an Organization by 'InventoryName' field case-insensitive.
 func (l *ListOrganizations) GetByName(name string) (*Organization, bool) {
 	for _, organizationRow := range l.Results {
 		if strings.EqualFold(organizationRow.Name, name) {
@@ -788,7 +794,7 @@ func (l *ListOrganizations) GetByName(name string) (*Organization, bool) {
 	return nil, false
 }
 
-// GetByName returns an JobTemplate by 'Name' field case-insensitive.
+// GetByName returns an JobTemplate by 'InventoryName' field case-insensitive.
 func (l *ListJobTemplates) GetByName(name string) (*JobTemplate, bool) {
 	for _, templateRow := range l.Results {
 		if strings.EqualFold(templateRow.Name, name) {
@@ -799,7 +805,7 @@ func (l *ListJobTemplates) GetByName(name string) (*JobTemplate, bool) {
 	return nil, false
 }
 
-// GetByName returns an Inventory by 'Name' field case-insensitive.
+// GetByName returns an Inventory by 'InventoryName' field case-insensitive.
 func (l *ListInventories) GetByName(name string) (*Inventory, bool) {
 	for _, inventoryRow := range l.Results {
 		if strings.EqualFold(inventoryRow.Name, name) {
@@ -810,7 +816,7 @@ func (l *ListInventories) GetByName(name string) (*Inventory, bool) {
 	return nil, false
 }
 
-// GetByName returns an Host by 'Name' field case-insensitive.
+// GetByName returns an Host by 'InventoryName' field case-insensitive.
 func (l *ListHosts) GetByName(name string) (*Host, bool) {
 	for _, hostRow := range l.Results {
 		if strings.EqualFold(hostRow.Name, name) {

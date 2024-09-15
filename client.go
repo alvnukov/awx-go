@@ -10,6 +10,7 @@ type Client struct {
 	HostService          *HostService
 	JobService           *JobService
 	OrganizationsService *OrganizationsService
+	GroupService         *GroupService
 }
 
 func NewClient(baseURL string, username string, password string) (*Client, error) {
@@ -19,31 +20,7 @@ func NewClient(baseURL string, username string, password string) (*Client, error
 		Password: password,
 	}
 
-	requester := Requester{
-		Base:   baseURL,
-		Auth:   &tokenAuth,
-		Client: http.DefaultClient,
-	}
-
-	client := Client{
-		JobTemplateService: &JobTemplateService{
-			Requester: &requester,
-		},
-		InventoriesService: &InventoriesService{
-			Requester: &requester,
-		},
-		HostService: &HostService{
-			Requester: &requester,
-		},
-		JobService: &JobService{
-			Requester: &requester,
-		},
-		OrganizationsService: &OrganizationsService{
-			Requester: &requester,
-		},
-	}
-
-	return &client, nil
+	return newClient(baseURL, &tokenAuth)
 }
 
 func NewClientWithToken(baseURL string, token string) (*Client, error) {
@@ -52,9 +29,13 @@ func NewClientWithToken(baseURL string, token string) (*Client, error) {
 		Token: token,
 	}
 
+	return newClient(baseURL, &tokenAuth)
+}
+
+func newClient(baseURL string, auth IAuth) (*Client, error) {
 	requester := Requester{
 		Base:   baseURL,
-		Auth:   &tokenAuth,
+		Auth:   auth,
 		Client: http.DefaultClient,
 	}
 
@@ -63,6 +44,9 @@ func NewClientWithToken(baseURL string, token string) (*Client, error) {
 			Requester: &requester,
 		},
 		InventoriesService: &InventoriesService{
+			Requester: &requester,
+		},
+		GroupService: &GroupService{
 			Requester: &requester,
 		},
 		HostService: &HostService{
